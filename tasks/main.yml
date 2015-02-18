@@ -55,7 +55,3 @@
   
 - name: Remove tmp files
   shell: rm -rf "/tmp/{{ birt_runtime_unzipdir }}"
-
-- name: Start Tomcat
-  service: name=tomcat7 state=started
-
