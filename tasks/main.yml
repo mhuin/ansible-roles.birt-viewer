@@ -30,7 +30,7 @@
 
 # Install git_access_key. It's better to copy this manually once the playbook has been run once
 #- name: Setup git_access_private_key
-#  copy: scr="files/{{ git_acess_key }}" dest="/home/birt/.ssh/{{ git_access_key }}" mode=0600
+#  copy: scr="files/{{ git_access_key }}" dest="/home/birt/.ssh/{{ git_access_key }}" mode=0600
 
 - name: Unzip BIRT viwer package to tmp
   unarchive:
