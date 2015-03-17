@@ -7,6 +7,7 @@
   with_items:
     - tomcat7
     - unzip
+    - apache2
 
 - name: Setup BIRT user
   user: name="{{ birt_user }}"
@@ -52,6 +53,17 @@
   shell: cp -rf /tmp/{{ birt_runtime_unzipdir }}/WebViewerExample/* {{ birtviewer_dst }}/
   notify:
     - restart tomcat
+
+- name: "Enable proxy_ajp"
+  command: /usr/sbin/a2enmod proxy_ajp
+  notify:
+    - start apache2
   
+- name: "Add default-ssl.conf virtual host configuration"
+  sudo: yes
+  action: template src=default-ssl.j2 dest=/etc/apache2/sites-available/default-ssl.conf owner=root group=root mode=0640
+  notify:
+    - restart apache2
+
 - name: Remove tmp files
   shell: rm -rf "/tmp/{{ birt_runtime_unzipdir }}"

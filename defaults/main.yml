@@ -1,0 +1,15 @@
+---
+# defaults file for role birt-viewer
+
+# You might want to override these in you main playbook's group_vars
+
+
+# Server certificates to be used
+sslcert: '/etc/ssl/certs/ssl-cert-snakeoil.pem'
+sslkey: '/etc/ssl/private/ssl-cert-snakeoil.key'
+# sslchain: '/etc/ssl/forgeservicelab.fi.crt.chain'
+
+# apach2 site conf default-ssl.conf
+birt_viewer:
+  server_name: "localhost" # ServerName e.g. myserver.domain.com
+  allow_ip: "83.150.108.249" # Allow from
