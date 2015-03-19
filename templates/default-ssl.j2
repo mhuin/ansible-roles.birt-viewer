@@ -2,8 +2,8 @@
 
 NameVirtualHost *:80
 <VirtualHost *:80>
-   ServerName {{ birt_viewer.server_name }}
-   Redirect permanent / https://{{ birt_viewer.server_name }}/
+   ServerName {{ apache.server_name }}
+   Redirect permanent / https://{{ apache.server_name }}/
 </VirtualHost>
 
 <VirtualHost _default_:443>
@@ -44,10 +44,10 @@ NameVirtualHost *:80
         SSLProtocol -ALL +TLSv1 +TLSv1.1 +TLSv1.2
         SSLHonorCipherOrder on
         SSLCipherSuite ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:!AES128
-    	SSLCertificateFile {{ sslcert }}
-    	SSLCertificateKeyFile {{ sslkey }}
+    	SSLCertificateFile {{ apache.sslcert }}
+    	SSLCertificateKeyFile {{ apache.sslkey }}
 {% if sslchain is defined %}
-        SSLCertificateChainFile {{ sslchain }}
+        SSLCertificateChainFile {{ apache.sslchain }}
 {% endif %}
 
         <FilesMatch "\.(cgi|shtml|phtml|php)$">
@@ -67,9 +67,9 @@ NameVirtualHost *:80
         <Location /birt-viewer>
                 Order deny,allow
                 Deny from all
-                Allow from {{ birt_viewer.allow_ip }}
+                Allow from {{ apache.allow_ip }}
                 ProxyPass ajp://localhost:8009/birt-viewer/
-                ProxyPassReverse https://{{ birt_viewer.server_name }}/birt-viewer/
+                ProxyPassReverse https://{{ apache.server_name }}/birt-viewer/
         </Location>
 
 </VirtualHost>

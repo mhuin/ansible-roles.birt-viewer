@@ -1,4 +1,4 @@
-heartbeat
+birt-viewer
 =========
 
-BIRT viewer for FORGE reporting playbook
+BIRT viewer fole for deploying birt-viwer web app on Tomcat

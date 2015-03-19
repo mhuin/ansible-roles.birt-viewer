@@ -10,7 +10,7 @@
     - apache2
 
 - name: Setup BIRT user
-  user: name="{{ birt_user }}"
+  user: name="{{ birt_viewer.user }}"
 
 # - command: pwda
 #   register: result 
@@ -22,15 +22,13 @@
   
 - name: Setup authorized keys
   authorized_key: 
-    user: "{{ birt_user }}"
+    user: "{{ birt_viewer.user }}"
     key: "{{ lookup('file', '%s' % item) }}"
-  with_items:
-    - "files/{{ birt_ssh_pubkey }}"
-    - "files/{{ jenkins_ssh_pubkey }}"
+  with_items: birt_viewer.auth_keys
 
 # Install git_access_key. It's better to copy this manually once the playbook has been run once
 #- name: Setup git_access_private_key
-#  copy: scr="files/{{ git_access_key }}" dest="/home/birt/.ssh/{{ git_access_key }}" mode=0600
+#  copy: scr="{{ birt_viewer.repo_access_key }}" dest="/home/{{ birt_viewer.user}}/.ssh/{{ birt_viewer.repo_access_key }}" mode=0600
 
 - name: Unzip BIRT viwer package to tmp
   unarchive:
