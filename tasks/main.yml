@@ -1,54 +1,37 @@
 ---
 
-- name: Install required packages
-  apt:
-    pkg={{ item }}
-    state=latest
-  with_items:
-    - tomcat7
-    - unzip
-    - apache2
+- name: Install dependencies
+  action: "{{ ansible_pkg_mgr }} name={{ item }} state=installed update-cache=yes"
+  with_items: 
+      - "{{ viewer_deps }}"
 
-- name: Setup BIRT user
-  user: name="{{ birt_viewer.user }}"
-
-# - command: pwda
-#   register: result 
-#   connection: local
-#   sudo: False
-  
-# - debug:
-#     msg: '{{ result }}'
-  
-- name: Setup authorized keys
-  authorized_key: 
-    user: "{{ birt_viewer.user }}"
-    key: "{{ lookup('file', '%s' % item) }}"
-  with_items: birt_viewer.auth_keys
-
-# Install git_access_key. It's better to copy this manually once the playbook has been run once
-#- name: Setup git_access_private_key
-#  copy: scr="{{ birt_viewer.repo_access_key }}" dest="/home/{{ birt_viewer.user}}/.ssh/{{ birt_viewer.repo_access_key }}" mode=0600
-
-- name: Unzip BIRT viwer package to tmp
+- name: Unzip birt-viewer package
   unarchive:
-    src: "{{ birt_runtime }}"
-    dest: /tmp/
-  tags: notthis
+    src: "{{ birt_file }}"
+    dest: "{{ tomcat_webapps_dir }}"
+    owner: tomcat7
+    group: tomcat7
+    mode: 0755
 
+- name: Copy birt-viewer app to the tomcat webapps root
+  command: "cp -R {{ tomcat_webapps_dir }}/{{ birt_dir }}/WebViewerExample/ {{ birtviewer_dst }}"
+    
 - name: Install sql connectors
   copy: 
     src: "{{ item }}"
-    dest: "{{ birtviewer_dst }}/WEB-INF/lib/" 
+    dest: "{{ birtviewer_dst }}/WEB-INF/lib/"
+    owner: tomcat7
+    group: tomcat7
+    mode: 0755
   with_items: 
-   - "{{ mysql_connector }}"
-   - "{{ psql_connector }}"
+   - "{{ birt_libs }}"
 
-- name: Create birtviewer directory
-  file: path="{{ birtviewer_dst }}" state=directory
-
-- name: Copy BIRT webapp to birtviewer directory
-  shell: cp -rf /tmp/{{ birt_runtime_unzipdir }}/WebViewerExample/* {{ birtviewer_dst }}/
+- name: Set the file permissions
+  file:
+    recurse: yes
+    path: "{{ birtviewer_dst }}/"
+    owner: tomcat7
+    group: tomcat7
   notify:
     - restart tomcat
 
@@ -56,6 +39,20 @@
   command: /usr/sbin/a2enmod proxy_ajp
   notify:
     - start apache2
+
+- name: "Enable AJP connector on port 8009"
+  replace:
+    dest: /etc/tomcat7/server.xml
+    regexp: '\s+<\!--\n(.+?port="8009".+)\n\s+-->'
+    replace: '\n\n\1'
+    backup: yes
+
+#- name: "Disable 8080"
+#  replace:
+#    dest: /etc/tomcat7/server.xml
+#    regexp: '(\s+)(.+Connector port="8080".+\n.+\n.+\n.+)'
+#    replace: '\1<!--\n\1\2\n\1-->'
+#    backup: yes
   
 - name: "Add default-ssl.conf virtual host configuration"
   sudo: yes
@@ -63,5 +60,8 @@
   notify:
     - restart apache2
 
-- name: Remove tmp files
-  shell: rm -rf "/tmp/{{ birt_runtime_unzipdir }}"
+- name: "Enable default-ssl.conf virtual host configuration"
+  sudo: yes
+  command: /usr/sbin/a2ensite default-ssl.conf
+  notify:
+    - restart apache2
