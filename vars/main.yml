@@ -1,7 +1,16 @@
 ---
 # The desired files and directories this role will install and use
-birt_runtime: birt-runtime-4_4_1-20140916.zip
-birt_runtime_unzipdir: birt-runtime-4_4_1
-birtviewer_dst: /var/lib/tomcat7/webapps/birt-viewer
-mysql_connector: mysql-connector-java-5.1.31-bin.jar
-psql_connector: postgresql-9.3-1102.jdbc41.jar
+#birt_file: birt-runtime-4_4_1-20140916.zip
+birt_file: birt-runtime-4_4_2-20150217.zip
+birt_dir: birt-runtime-4_4_2
+tomcat_webapps_dir: /var/lib/tomcat7/webapps
+birtviewer_dst: "{{ tomcat_webapps_dir }}/birt-viewer"
+birt_libs:
+  - mysql-connector-java-5.1.31-bin.jar
+  - postgresql-9.3-1102.jdbc41.jar
+viewer_deps:
+  - tomcat7
+  - unzip
+  - apache2
+  - default-jre
+    
