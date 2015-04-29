@@ -2,18 +2,9 @@
 # defaults file for role birt-viewer
 
 # You might want to override these in you main playbook's group_vars
-birt_viewer:
-  user: birt
-  auth_keys:
-    - 'birt.pub'
-    - 'jenkins.pub'
-  repo_access_key: git_access_key
-
 apache:
   server_name: "localhost" # ServerName e.g. myserver.domain.com
   allow_ip: "83.150.108.249" # Allow http connections from
   sslcert: '/etc/ssl/certs/ssl-cert-snakeoil.pem'
   sslkey: '/etc/ssl/private/ssl-cert-snakeoil.key'
   # sslchain: '/etc/ssl/forgeservicelab.fi.crt.chain'
-
-
