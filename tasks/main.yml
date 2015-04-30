@@ -35,11 +35,13 @@
   notify:
     - restart tomcat
 
-- name: "Enable proxy_ajp"
-  command: /usr/sbin/a2enmod proxy_ajp
+- name: "Enable required apache modules"
+  command: /usr/sbin/a2enmod "{{ item }}"
+  with_items: 
+    - "{{ apache_mods }}"
   notify:
     - start apache2
-
+  
 - name: "Enable AJP connector on port 8009"
   replace:
     dest: /etc/tomcat7/server.xml

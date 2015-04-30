@@ -13,4 +13,6 @@ viewer_deps:
   - unzip
   - apache2
   - default-jre
-    
+apache_mods:
+  - ssl
+  - proxy_ajp
