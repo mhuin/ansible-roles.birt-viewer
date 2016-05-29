@@ -8,11 +8,11 @@ birt_libs:
   - mysql-connector-java-5.1.31-bin.jar
   - postgresql-9.3-1102.jdbc41.jar
 viewer_deps:
-  - tomcat7
+  - tomcat
   - unzip
-  - apache2
-  - default-jre
+  - httpd
   - wget
+  - git
 apache_mods:
   - ssl
   - proxy_ajp
