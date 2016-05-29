@@ -1,6 +1,7 @@
 ---
 # The desired files and directories this role will install and use
 birt_url: http://ftp-stud.fht-esslingen.de/pub/Mirrors/eclipse/birt/downloads/drops/R-R1-4_5_0-201506092134/birt-runtime-4.5.0-20150609.zip
+birt_dir: birt-runtime-4_5_0
 tomcat_webapps_dir: /var/lib/tomcat/webapps
 birtviewer_dst: "{{ tomcat_webapps_dir }}/birt-viewer"
 birt_libs:
