@@ -5,12 +5,15 @@
   with_items: 
       - "{{ viewer_deps }}"
 
+- name: Download latest birt-viewer
+  action: "wget {{ birt_url }} -O /tmp/birt.zip"
+
 - name: Unzip birt-viewer package
   unarchive:
-    src: "{{ birt_file }}"
+    src: /tmp/birt.zip
     dest: "{{ tomcat_webapps_dir }}"
-    owner: tomcat7
-    group: tomcat7
+    owner: tomcat
+    group: tomcat
     mode: 0755
 
 - name: Copy birt-viewer app to the tomcat webapps root
@@ -20,8 +23,8 @@
   copy: 
     src: "{{ item }}"
     dest: "{{ birtviewer_dst }}/WEB-INF/lib/"
-    owner: tomcat7
-    group: tomcat7
+    owner: tomcat
+    group: tomcat
     mode: 0755
   with_items: 
    - "{{ birt_libs }}"
@@ -30,8 +33,8 @@
   file:
     recurse: yes
     path: "{{ birtviewer_dst }}/"
-    owner: tomcat7
-    group: tomcat7
+    owner: tomcat
+    group: tomcat
   notify:
     - restart tomcat
 
@@ -40,11 +43,11 @@
   with_items: 
     - "{{ apache_mods }}"
   notify:
-    - start apache2
+    - start httpd
   
 - name: "Enable AJP connector on port 8009"
   replace:
-    dest: /etc/tomcat7/server.xml
+    dest: /etc/tomcat/server.xml
     regexp: '\s+<\!--\n(.+?port="8009".+)\n\s+-->'
     replace: '\n\n\1'
     backup: yes
@@ -60,10 +63,10 @@
   sudo: yes
   action: template src=default-ssl.j2 dest=/etc/apache2/sites-available/default-ssl.conf owner=root group=root mode=0640
   notify:
-    - restart apache2
+    - restart httpd
 
 - name: "Enable default-ssl.conf virtual host configuration"
   sudo: yes
   command: /usr/sbin/a2ensite default-ssl.conf
   notify:
-    - restart apache2
+    - restart httpd

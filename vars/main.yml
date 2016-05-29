@@ -1,7 +1,6 @@
 ---
 # The desired files and directories this role will install and use
-#birt_file: birt-runtime-4_4_2-20150217.zip
-#birt_dir: birt-runtime-4_4_2
+birt_url: http://www.eclipse.org/downloads/download.php?file=/birt/downloads/drops/R-R1-4_5_0-201506092134/birt-runtime-4.5.0-20150609.zip
 tomcat_webapps_dir: /var/lib/tomcat7/webapps
 birtviewer_dst: "{{ tomcat_webapps_dir }}/birt-viewer"
 birt_libs:
