@@ -10,6 +10,7 @@
 
 - name: Unzip birt-viewer package
   unarchive:
+    copy: no
     src: "/tmp/birt.zip"
     dest: "{{ tomcat_webapps_dir }}"
     owner: tomcat
