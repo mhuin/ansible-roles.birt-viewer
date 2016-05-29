@@ -6,7 +6,7 @@
       - "{{ viewer_deps }}"
 
 - name: Download latest birt-viewer
-  action: "wget {{ birt_url }} -O /tmp/birt.zip"
+  get_url: url={{ birt_url }} dest=/tmp/birt.zip
 
 - name: Unzip birt-viewer package
   unarchive:
