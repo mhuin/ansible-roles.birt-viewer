@@ -1,8 +1,7 @@
 ---
 # The desired files and directories this role will install and use
-#birt_file: birt-runtime-4_4_1-20140916.zip
-birt_file: birt-runtime-4_4_2-20150217.zip
-birt_dir: birt-runtime-4_4_2
+#birt_file: birt-runtime-4_4_2-20150217.zip
+#birt_dir: birt-runtime-4_4_2
 tomcat_webapps_dir: /var/lib/tomcat7/webapps
 birtviewer_dst: "{{ tomcat_webapps_dir }}/birt-viewer"
 birt_libs:
@@ -13,6 +12,7 @@ viewer_deps:
   - unzip
   - apache2
   - default-jre
+  - wget
 apache_mods:
   - ssl
   - proxy_ajp
