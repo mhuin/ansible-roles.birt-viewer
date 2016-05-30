@@ -13,3 +13,4 @@ viewer_deps:
   - httpd
   - wget
   - git
+  - mariadb
