@@ -38,13 +38,6 @@
     group: tomcat
   notify:
     - restart tomcat
-
-- name: "Enable required apache modules"
-  command: /usr/sbin/a2enmod "{{ item }}"
-  with_items: 
-    - "{{ apache_mods }}"
-  notify:
-    - start httpd
   
 - name: "Enable AJP connector on port 8009"
   replace:
@@ -52,6 +45,9 @@
     regexp: '\s+<\!--\n(.+?port="8009".+)\n\s+-->'
     replace: '\n\n\1'
     backup: yes
+  notify:
+    - restart tomcat
+    - restart httpd
 
 #- name: "Disable 8080"
 #  replace:
@@ -59,15 +55,3 @@
 #    regexp: '(\s+)(.+Connector port="8080".+\n.+\n.+\n.+)'
 #    replace: '\1<!--\n\1\2\n\1-->'
 #    backup: yes
-  
-- name: "Add default-ssl.conf virtual host configuration"
-  sudo: yes
-  action: template src=default-ssl.j2 dest=/etc/apache2/sites-available/default-ssl.conf owner=root group=root mode=0640
-  notify:
-    - restart httpd
-
-- name: "Enable default-ssl.conf virtual host configuration"
-  sudo: yes
-  command: /usr/sbin/a2ensite default-ssl.conf
-  notify:
-    - restart httpd

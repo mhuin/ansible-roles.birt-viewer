@@ -13,6 +13,3 @@ viewer_deps:
   - httpd
   - wget
   - git
-apache_mods:
-  - ssl
-  - proxy_ajp
